@@ -317,7 +317,7 @@ double mx = 0, my = 0, vx = 0, vy = 0, cov = 0;
         fprintf(fp, ".");
       }
     }
-    fprintf(fp, "::: %+.2f -> %+.2f\n", response[s], pred);
+    fprintf(fp, "::: %+.9f -> %+.9f\n", response[s], pred);
   }
 
 
