@@ -25,7 +25,9 @@
 ##########################################################################
 
 # Installation directory
-INSTALLDIR=/usr/local/bin
+#INSTALLDIR=/usr/local/bin
+BRANCH_NAME ?= $(shell git rev-parse --abbrev-ref HEAD)
+INSTALLDIR  := $(CURDIR)/build-$(BRANCH_NAME)
 
 # Libraries
 GDAL_INCLUDES = -I/usr/include/gdal
@@ -71,8 +73,8 @@ CFLAGS=-O3 -Wall -fopenmp
 
 # Directories
 SRCDIR = src
-OBJDIR = obj
-BINDIR = bin
+OBJDIR = $(CURDIR)/build-$(BRANCH_NAME)/obj
+BINDIR = $(CURDIR)/build-$(BRANCH_NAME)/bin
 BASHDIR = bash
 RSTATSDIR = rstats
 PYTHONDIR = python
@@ -113,7 +115,9 @@ TEST_EXE = $(patsubst $(SRCDIR)/tests/%.c, $(BINDIR)/force-test/%, $(TEST_SRC))
 DEPENDENCIES = $(CROSS_OBJ:.o=.d) $(LOWER_OBJ:.o=.d) $(HIGHER_OBJ:.o=.d) $(AUX_OBJ:.o=.d)
 
 # Targets
-all: check-required exe tests scripts misc
+all: $(BINDIR) $(OBJDIR) check-required exe tests scripts misc
+$(BINDIR) $(OBJDIR):
+	@mkdir -p $@
 exe: aux higher lower
 aux: $(MAIN_AUX_EXE)
 higher: $(MAIN_HIGHER_EXE)
